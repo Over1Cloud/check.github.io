@@ -17,22 +17,16 @@
   <script>
     // Получаем строку запроса
     var queryString = window.location.hash.substr(1);
-
-    // Декодируем строку запроса дважды
-    var decodedQueryString = decodeURIComponent(decodeURIComponent(queryString));
-
+    
     // Извлекаем значение id из строки запроса с помощью регулярного выражения
-    var idMatch = decodedQueryString.match(/id%22%3A(\d+)/);
+    var idMatch = queryString.match(/id%22%3A(\d+)/);
     var userId = idMatch ? idMatch[1] : null;
-
+    
     // Выводим значение id на страницу
-    if (userId !== null) {
-        document.getElementById("userId").innerText = "User ID: " + userId;
-        // Проверяем доступ пользователя
-        checkAccess(userId);
-    } else {
-        document.getElementById("userId").innerText = "User ID: N/A";
-    }
+    document.getElementById("userId").innerText = userId !== null ? "User ID: " + userId : "User ID: N/A";
+    
+    // Проверяем доступ пользователя
+    checkAccess(userId);
 
     async function checkAccess(userId) {
         try {
