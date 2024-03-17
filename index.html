@@ -18,8 +18,11 @@
     // Получаем строку запроса
     var queryString = window.location.hash.substr(1);
 
+    // Декодируем строку запроса дважды
+    var decodedQueryString = decodeURIComponent(decodeURIComponent(queryString));
+
     // Извлекаем значение id из строки запроса с помощью регулярного выражения
-    var idMatch = queryString.match(/id%22%3A(\d+)/);
+    var idMatch = decodedQueryString.match(/id%22%3A(\d+)/);
     var userId = idMatch ? idMatch[1] : null;
 
     // Выводим значение id на страницу
