@@ -1,4 +1,6 @@
 window.onload = async function() {
+  console.log("Запущена проверка доступа.");
+
   const accessMessage = document.getElementById('accessMessage');
 
   try {
@@ -8,53 +10,60 @@ window.onload = async function() {
     // Получаем информацию о боте
     const botInfoResponse = await fetch(`https://api.telegram.org/bot${botToken}/getMe`);
     const botInfoData = await botInfoResponse.json();
+    console.log("Информация о боте получена:", botInfoData);
+
     const botId = botInfoData.result.id;
 
-    // Получаем информацию о последнем обновлении
-    const updatesResponse = await fetch(`https://api.telegram.org/bot${botToken}/getUpdates`);
-    const updatesData = await updatesResponse.json();
-    const userId = updatesData.result[updatesData.result.length - 1].message.from.id;
-
-    // Проверяем, есть ли ID пользователя и ID бота
-    if (!userId || !botId) {
-      throw new Error('User ID or Bot ID not provided.');
+    // Проверяем, есть ли ID бота
+    if (!botId) {
+      throw new Error('Bot ID not provided.');
     }
 
-    // Добавляем ID пользователя к хешу URL
-    window.location.hash = userId;
+    console.log("ID бота:", botId);
 
     // Проверяем доступ пользователя
-    checkAccess(userId);
+    checkAccess(botId);
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Ошибка:', error);
     accessMessage.textContent = 'Ошибка, попробуйте позже.';
   }
 };
 
-async function checkAccess(userId) {
+async function checkAccess(botId) {
   const accessMessage = document.getElementById('accessMessage');
 
   try {
     const response = await fetch(`https://raw.githubusercontent.com/Over1Cloud/mira.github.io/main/users.txt?token=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`);
-    const data = await response.json();
+    const data = await response.text();
+    console.log("Текст файла получен:", data);
     
-    const user = data.find(user => user.ID == userId);
+    const users = data.split('\n');
+    console.log("Список пользователей:", users);
     
-    if (!user) {
-      // Если пользователя нет
+    const userId = users[users.length - 1].split(',')[0]; // Получаем ID пользователя из последней строки файла
+    
+    console.log("ID пользователя:", userId);
+
+    if (!userId) {
+      // Если ID пользователя не найден
       accessMessage.textContent = 'Доступ запрещен.';
-    } else if (user.ACCESS === "1") {
-      // Если доступ есть
-      accessMessage.textContent = 'Доступ получен. Redirecting...';
-      setTimeout(function() {
-        window.location.href = 'https://over1cloud.github.io/mira.github.io/';
-      }, 2000);
     } else {
-      // Если доступ запрещен
-      accessMessage.textContent = 'Access denied.';
+      // Проверяем, есть ли доступ у пользователя
+      const userAccess = users.find(user => user.split(',')[0] == userId).split(',')[1];
+      
+      if (userAccess === "1") {
+        // Если доступ есть
+        accessMessage.textContent = 'Доступ получен. Перенаправление...';
+        setTimeout(function() {
+          window.location.href = 'https://over1cloud.github.io/mira.github.io/';
+        }, 2000);
+      } else {
+        // Если доступа нет
+        accessMessage.textContent = 'Доступ запрещен.';
+      }
     }
   } catch (error) {
-    console.error('Error:', error);
-    accessMessage.textContent = 'An error occurred. Please try again later.';
+    console.error('Ошибка:', error);
+    accessMessage.textContent = 'Произошла ошибка. Пожалуйста, попробуйте позже.';
   }
 }
