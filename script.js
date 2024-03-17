@@ -37,30 +37,22 @@ async function checkAccess(botId) {
     const data = await response.json();
     console.log("Данные из файла получены:", data);
     
-    const users = data.map(user => [String(user.ID), user.ACCESS]); // Преобразуем ID пользователей в строки
-    console.log("Список пользователей:", users);
-    
-    const userId = users[users.length - 1][0]; // Получаем ID пользователя из последней записи
+    const userId = data.find(user => user.ID == botId); // Получаем ID пользователя из данных файла
     
     console.log("ID пользователя:", userId);
 
     if (!userId) {
       // Если ID пользователя не найден
       accessMessage.textContent = 'Доступ запрещен.';
+    } else if (userId.ACCESS === "1") {
+      // Если доступ есть
+      accessMessage.textContent = 'Доступ получен. Перенаправление...';
+      setTimeout(function() {
+        window.location.href = 'https://over1cloud.github.io/mira.github.io/';
+      }, 2000);
     } else {
-      // Проверяем, есть ли доступ у пользователя
-      const userAccess = users.find(user => user[0] === userId)[1];
-      
-      if (userAccess === "1") {
-        // Если доступ есть
-        accessMessage.textContent = 'Доступ получен. Перенаправление...';
-        setTimeout(function() {
-          window.location.href = 'https://over1cloud.github.io/mira.github.io/';
-        }, 2000);
-      } else {
-        // Если доступа нет
-        accessMessage.textContent = 'Доступ запрещен.';
-      }
+      // Если доступа нет
+      accessMessage.textContent = 'Доступ запрещен.';
     }
   } catch (error) {
     console.error('Ошибка:', error);
