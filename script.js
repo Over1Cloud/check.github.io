@@ -10,6 +10,7 @@ function addDigit(digit) {
   }
 }
 
+
 function updatePinDisplay() {
   const pinDigits = document.querySelectorAll('.pinDigit');
   pinDigits.forEach((digit, index) => {
