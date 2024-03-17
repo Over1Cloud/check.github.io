@@ -1,0 +1,54 @@
+body {
+  background-color: #333;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto; /* Это центрирует контейнер */
+  padding: 60px;
+  text-align: center; /* Это центрирует текст в контейнере */
+}
+
+h1 {
+  margin-top: 40;
+  text-align: center; /* Центрируем заголовок h1 */
+  font-size: 28px; /* Уменьшаем размер заголовка */
+}
+
+form {
+  margin-bottom: 20px;
+  display: inline-block; /* Делаем форму блочно-строчным элементом для центрирования */
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  text-align: left; /* Выравниваем текст метки по левому краю */
+}
+
+input[type="text"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#accessMessage {
+  font-size: 18px;
+  text-align: center; /* Центрируем текст сообщения */
+}
