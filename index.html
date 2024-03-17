@@ -1,34 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Telegram User ID</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-size: 2em;
-            background-color: #f0f0f0;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Проверка доступа</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="userId"></div>
+  <div class="container">
+    <h1>Проверка доступа</h1>
+    <p id="userId"></p>
+    <p id="accessMessage"></p>
+  </div>
 
-    <script>
-        // Инициализация данных Telegram Web App
-        var search = Telegram.WebApp.initData;
+  <script>
+    // Получаем строку запроса
+    var queryString = window.location.hash.substr(1);
 
-        // Конвертация данных в JSON
-        var converted = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}');
-        
-        // Извлечение идентификатора пользователя
-        var userId = converted.user_id;
-        
-        // Отображение идентификатора пользователя на странице
+    // Извлекаем значение id из строки запроса с помощью регулярного выражения
+    var idMatch = queryString.match(/id%22%3A(\d+)/);
+    var userId = idMatch ? idMatch[1] : null;
+
+    // Выводим значение id на страницу
+    if (userId !== null) {
         document.getElementById("userId").innerText = "User ID: " + userId;
-    </script>
+        // Проверяем доступ пользователя
+        checkAccess(userId);
+    } else {
+        document.getElementById("userId").innerText = "User ID: N/A";
+    }
+
+    async function checkAccess(userId) {
+        try {
+            const response = await fetch(`https://raw.githubusercontent.com/Over1Cloud/mira.github.io/main/users.txt?token=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`);
+            const data = await response.json();
+
+            const user = data.find(user => user.ID == userId);
+            
+            if (!user) {
+                // Если пользователя нет
+                document.getElementById("accessMessage").innerText = 'Доступ запрещен.';
+            } else if (user.ACCESS === "1") {
+                // Если доступ есть, выполняем редирект
+                document.getElementById("accessMessage").innerText = 'Доступ получен. Перенаправление...';
+                setTimeout(function() {
+                    window.location.href = 'https://over1cloud.github.io/mira.github.io/';
+                }, 2000);
+            } else {
+                // Если доступа нет
+                document.getElementById("accessMessage").innerText = 'Доступ запрещен.';
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            document.getElementById("accessMessage").innerText = 'Произошла ошибка. Пожалуйста, попробуйте позже.';
+        }
+    }
+  </script>
 </body>
 </html>
