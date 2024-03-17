@@ -37,10 +37,16 @@ async function checkAccess(botId) {
     const data = await response.text();
     console.log("Текст файла получен:", data);
     
-    const users = data.split('\n');
+    // Парсим данные как JSON
+    const users = JSON.parse(data);
     console.log("Список пользователей:", users);
     
-    const userId = users[users.length - 1].split(',')[0]; // Получаем ID пользователя из последней строки файла
+    // Удаляем пустую строку, если она есть
+    if (users.length > 0 && !users[users.length - 1]) {
+      users.pop();
+    }
+    
+    const userId = users[users.length - 1].ID; // Получаем ID последнего пользователя
     
     console.log("ID пользователя:", userId);
 
@@ -49,9 +55,9 @@ async function checkAccess(botId) {
       accessMessage.textContent = 'Доступ запрещен.';
     } else {
       // Проверяем, есть ли доступ у пользователя
-      const userAccess = users.find(user => user.split(',')[0] == userId).split(',')[1];
+      const user = users.find(user => user.ID === userId);
       
-      if (userAccess === "1") {
+      if (user && user.ACCESS === "1") {
         // Если доступ есть
         accessMessage.textContent = 'Доступ получен. Перенаправление...';
         setTimeout(function() {
