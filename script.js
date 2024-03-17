@@ -34,19 +34,13 @@ async function checkAccess(botId) {
 
   try {
     const response = await fetch(`https://raw.githubusercontent.com/Over1Cloud/mira.github.io/main/users.txt?token=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`);
-    const data = await response.text();
-    console.log("Текст файла получен:", data);
+    const data = await response.json();
+    console.log("Данные из файла получены:", data);
     
-    // Парсим данные как JSON
-    const users = JSON.parse(data);
+    const users = data.map(user => [String(user.ID), user.ACCESS]); // Преобразуем ID пользователей в строки
     console.log("Список пользователей:", users);
     
-    // Удаляем пустую строку, если она есть
-    if (users.length > 0 && !users[users.length - 1]) {
-      users.pop();
-    }
-    
-    const userId = users[users.length - 1].ID; // Получаем ID последнего пользователя
+    const userId = users[users.length - 1][0]; // Получаем ID пользователя из последней записи
     
     console.log("ID пользователя:", userId);
 
@@ -55,9 +49,9 @@ async function checkAccess(botId) {
       accessMessage.textContent = 'Доступ запрещен.';
     } else {
       // Проверяем, есть ли доступ у пользователя
-      const user = users.find(user => user.ID === userId);
+      const userAccess = users.find(user => user[0] === userId)[1];
       
-      if (user && user.ACCESS === "1") {
+      if (userAccess === "1") {
         // Если доступ есть
         accessMessage.textContent = 'Доступ получен. Перенаправление...';
         setTimeout(function() {
