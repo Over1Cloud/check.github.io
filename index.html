@@ -1,39 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User ID Display</title>
+    <title>Telegram User ID</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            font-size: 24px;
+            font-size: 2em;
+            background-color: #f0f0f0;
         }
     </style>
 </head>
 <body>
-    <div id="user-id"></div>
+    <div id="userId"></div>
 
     <script>
-        // Получаем ID пользователя из Telegram WebApp API
-        let userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+        // Инициализация данных Telegram Web App
+        var search = Telegram.WebApp.initData;
 
-        // Находим элемент для отображения ID пользователя
-        let userIdElement = document.getElementById('user-id');
-
-        // Проверяем, получен ли ID пользователя
-        if (userId !== undefined) {
-            // Если получен, отображаем его в элементе
-            userIdElement.textContent = `User ID: ${userId}`;
-        } else {
-            // Если ID пользователя не получен, выводим сообщение об ошибке
-            userIdElement.textContent = 'Unable to retrieve user ID.';
-        }
+        // Конвертация данных в JSON
+        var converted = JSON.parse('{"' + search.replace(/&/g, '","').replace(/=/g,'":"') + '"}');
+        
+        // Извлечение идентификатора пользователя
+        var userId = converted.user_id;
+        
+        // Отображение идентификатора пользователя на странице
+        document.getElementById("userId").innerText = "User ID: " + userId;
     </script>
 </body>
 </html>
