@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter PIN</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Введите пинкод</h1>
+    <div id="pinContainer">
+      <div class="pinDigit"></div>
+      <div class="pinDigit"></div>
+      <div class="pinDigit"></div>
+      <div class="pinDigit"></div>
+    </div>
+    <div id="numpad">
+      <div class="numpadRow">
+        <button class="numpadButton" onclick="addDigit(1)">1</button>
+        <button class="numpadButton" onclick="addDigit(2)">2</button>
+        <button class="numpadButton" onclick="addDigit(3)">3</button>
+      </div>
+      <div class="numpadRow">
+        <button class="numpadButton" onclick="addDigit(4)">4</button>
+        <button class="numpadButton" onclick="addDigit(5)">5</button>
+        <button class="numpadButton" onclick="addDigit(6)">6</button>
+      </div>
+      <div class="numpadRow">
+        <button class="numpadButton" onclick="addDigit(7)">7</button>
+        <button class="numpadButton" onclick="addDigit(8)">8</button>
+        <button class="numpadButton" onclick="addDigit(9)">9</button>
+      </div>
+      <div class="numpadRow">
+        <button class="numpadButton" onclick="addDigit(0)">0</button>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
